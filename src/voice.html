@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DeskDSH 语音</title>
+  <link rel="stylesheet" href="voice.css">
+</head>
+<body>
+  <main class="panel">
+
+    <!-- Home: quick actions -->
+    <div id="view-home" class="view">
+      <header>
+        <div class="drag"><span class="mark">🎤</span><div><strong>语音</strong><small>本地离线识别 · 按住此处拖动</small></div></div>
+        <div class="header-actions">
+          <button id="open-settings" class="icon-btn" title="设置">⚙</button>
+          <button class="icon-btn close-btn" title="收起" aria-label="收起">×</button>
+        </div>
+      </header>
+
+      <section class="card">
+        <div class="section-title">语音识别预览</div>
+        <div id="preview" class="preview">未开始</div>
+        <div class="row">
+          <button id="mic-btn">🎤 开始说话</button>
+          <button id="self-test">自测识别</button>
+        </div>
+      </section>
+
+      <section class="card" id="meeting-card">
+        <div class="section-title">会议纪要（内录电脑声音）</div>
+        <div id="meeting-status" class="model-status">点击开始，识别电脑播放的音频</div>
+        <div class="row">
+          <button id="meeting-btn">📋 开始记录</button>
+          <button id="send-to-dsh" disabled>发送给 DSH 整理</button>
+        </div>
+        <div id="meeting-text" class="transcript" hidden></div>
+      </section>
+    </div>
+
+    <!-- Settings sub-page -->
+    <div id="view-settings" class="view" hidden>
+      <header>
+        <button id="back" class="icon-btn" title="返回">←</button>
+        <div class="drag"><span class="mark">⚙</span><div><strong>语音设置</strong><small>配置识别与发送</small></div></div>
+        <button class="icon-btn close-btn" title="收起" aria-label="收起">×</button>
+      </header>
+
+      <section class="card">
+        <div class="section-title">语音开关</div>
+        <div class="row">
+          <label class="toggle">
+            <input type="checkbox" id="voice-enabled">
+            <span>启用语音功能</span>
+          </label>
+        </div>
+        <div class="row">
+          <label class="toggle">
+            <input type="checkbox" id="wake-word-enabled">
+            <span>唤醒词监听</span>
+          </label>
+          <input id="wake-word" placeholder="唤醒词" maxlength="20" title="唤醒词">
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-title">输入设备</div>
+        <select id="input-device"><option value="default">系统默认</option></select>
+      </section>
+
+      <section class="card">
+        <div class="section-title">发送目标</div>
+        <select id="voice-target">
+          <option value="chat:current">迷你窗口 · 当前对话</option>
+          <option value="full:current">完整窗口 · 当前对话</option>
+          <option value="full:session">完整窗口 · 指定会话</option>
+        </select>
+        <div class="row" id="session-pick-row" hidden>
+          <select id="target-session"></select>
+          <button id="refresh-targets">刷新</button>
+        </div>
+        <div id="target-status" class="hint"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-title">识别模型</div>
+        <div id="model-status" class="model-status">检查中…</div>
+        <div id="download-area" hidden>
+          <button id="download-btn">下载模型 (~230MB)</button>
+          <div class="progress"><div id="progress-bar"></div></div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+  <script src="voice-capture.js"></script>
+  <script src="voice.js"></script>
+</body>
+</html>

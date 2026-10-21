@@ -1,0 +1,9 @@
+node_modules/
+models/
+dist/
+*.log
+.DS_Store
+.npm-cache/
+.electron-cache/
+electron-test*.js
+debug-voice.cjs

@@ -1,0 +1,32 @@
+:root { color-scheme: light; font-family: Inter, "Noto Sans CJK SC", system-ui, sans-serif; color: #26324d; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: transparent; }
+body { padding: 10px; }
+button, input { font: inherit; }
+.note { height: 100%; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(97,111,151,.25); border-radius: 22px; background: rgba(255,252,239,.97); box-shadow: 0 16px 46px rgba(29,41,72,.24); }
+header { min-height: 62px; display: flex; align-items: center; gap: 8px; padding: 10px 12px 8px 16px; border-bottom: 1px solid rgba(112,99,65,.12); }
+.drag { -webkit-app-region: drag; flex: 1; display: flex; align-items: center; gap: 10px; cursor: grab; }
+.mark { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 12px; color: white; background: linear-gradient(145deg,#6a7cff,#485edc); font-size: 21px; font-weight: 800; box-shadow: 0 5px 13px rgba(69,89,210,.25); }
+header strong, header small { display: block; }
+header strong { font-size: 15px; }
+header small { margin-top: 3px; color: #78819a; font-size: 11px; font-weight: 500; }
+header button, .delete { -webkit-app-region: no-drag; border: 0; background: transparent; cursor: pointer; }
+header button { width: 30px; height: 30px; border-radius: 50%; color: #7d8495; font-size: 20px; }
+header button:hover { background: #ede8da; color: #30384c; }
+#add-form { display: flex; gap: 7px; padding: 12px 14px 10px; }
+#add-form input { min-width: 0; flex: 1; height: 38px; padding: 0 12px; border: 1px solid #ded7c5; border-radius: 12px; outline: none; background: rgba(255,255,255,.78); color: #26324d; }
+#add-form input:focus { border-color: #7383e8; box-shadow: 0 0 0 3px rgba(91,110,225,.12); }
+#add-form button { width: 38px; border: 0; border-radius: 12px; background: #536dfe; color: white; cursor: pointer; font-size: 21px; }
+#todos { flex: 1; min-height: 0; margin: 0; padding: 1px 10px 10px; overflow: auto; list-style: none; }
+.todo { display: grid; grid-template-columns: 29px minmax(0,1fr) 29px; align-items: center; gap: 5px; min-height: 45px; padding: 5px 4px; border-bottom: 1px dashed rgba(111,101,75,.17); }
+.check { width: 23px; height: 23px; display: grid; place-items: center; border: 2px solid #9ca5bb; border-radius: 50%; background: transparent; color: transparent; cursor: pointer; font-size: 14px; font-weight: 900; }
+.todo.completed .check { border-color: #54aa78; background: #54aa78; color: white; }
+.text { min-width: 0; padding: 6px 4px; overflow-wrap: anywhere; cursor: text; line-height: 1.35; font-size: 13px; }
+.todo.completed .text { color: #9197a5; text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.edit { width: 100%; padding: 6px 7px; border: 1px solid #7182e9; border-radius: 8px; outline: none; background: white; color: #26324d; }
+.delete { width: 27px; height: 27px; border-radius: 50%; color: #a5a1a0; font-size: 17px; }
+.delete:hover { color: white; background: #e46b67; }
+.empty { flex: 1; display: grid; place-content: center; gap: 5px; text-align: center; color: #98917f; }
+.empty b { font-size: 14px; color: #726c60; }.empty span { font-size: 12px; }
+.empty[hidden] { display: none; }
+footer { padding: 8px 12px 10px; color: #9b9483; text-align: center; font-size: 10px; border-top: 1px solid rgba(112,99,65,.1); }

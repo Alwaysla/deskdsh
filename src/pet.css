@@ -1,0 +1,23 @@
+:root { color-scheme: light dark; font-family: Inter, system-ui, sans-serif; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: transparent; user-select: none; }
+body { -webkit-app-region: drag; }
+.pet-shell { position: relative; width: 100%; height: 100%; display: grid; place-items: end center; padding-bottom: 38px; }
+.status { position: absolute; z-index: 5; top: 2px; left: 50%; transform: translateX(-50%); max-width: 210px; padding: 7px 12px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; border: 1px solid rgba(100,116,150,.28); border-radius: 999px; background: rgba(250,252,255,.9); color: #33415f; box-shadow: 0 8px 24px rgba(32,43,68,.16); font-size: 11px; font-weight: 650; backdrop-filter: blur(12px); }
+.status[data-online='yes']::before { content: '●'; color: #32b878; margin-right: 6px; }
+.status[data-online='no']::before { content: '●'; color: #ef6a67; margin-right: 6px; }
+.pet { -webkit-app-region: drag; position: relative; width: 188px; height: 174px; padding: 0; overflow: hidden; border: 0; border-radius: 44% 44% 35% 35%; background: #fdefe6; cursor: grab; touch-action: none; transform-origin: 50% 90%; animation: breathe 3.2s ease-in-out infinite; box-shadow: 0 13px 24px rgba(39,53,91,.22); }
+.pet:active { cursor: grabbing; }
+.pet::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255,255,255,.34); pointer-events: none; }
+.pet img { -webkit-app-region: drag; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; transform: scale(1.28); transition: transform .25s ease, filter .25s ease; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.pet:hover img { transform: scale(1.32) translateY(-2px); filter: saturate(1.04) contrast(1.02); }
+.pet-glow { position: absolute; inset: auto 18px 4px; height: 18px; border-radius: 50%; background: rgba(47,68,128,.24); filter: blur(8px); mix-blend-mode: multiply; pointer-events: none; }
+.actions { -webkit-app-region: no-drag; position: absolute; z-index: 10; bottom: 1px; display: flex; gap: 5px; padding: 4px 6px; border: 1px solid rgba(110,125,160,.24); border-radius: 999px; background: rgba(250,252,255,.9); box-shadow: 0 6px 20px rgba(32,43,68,.15); backdrop-filter: blur(12px); opacity: .18; transition: opacity .2s, transform .2s; transform: translateY(3px); }
+.pet-shell:hover .actions, .actions:focus-within { opacity: 1; transform: none; }
+.actions button { width: 27px; height: 27px; border: 0; border-radius: 50%; background: transparent; color: #344260; cursor: pointer; font-size: 15px; }
+.actions button:hover, .actions button.active { background: #e5eaff; color: #3451dc; }
+.todo-button { position: relative; }
+.todo-button b { position: absolute; top: -5px; right: -5px; min-width: 16px; height: 16px; padding: 0 3px; border: 2px solid rgba(250,252,255,.96); border-radius: 999px; background: #ed6464; color: white; font: 700 9px/12px system-ui,sans-serif; }
+.todo-button b[hidden] { display: none; }
+@keyframes breathe { 0%,100% { transform: translateY(0) rotate(-.35deg); } 50% { transform: translateY(-4px) rotate(.35deg); } }
+@media (prefers-reduced-motion: reduce) { .pet { animation: none; } }

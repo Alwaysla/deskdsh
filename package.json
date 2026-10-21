@@ -1,0 +1,23 @@
+{
+  "name": "deskdsh",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ubuntu desktop-pet shell for DeepSeek Harness",
+  "main": "src/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "start:x11": "electron --ozone-platform=x11 .",
+    "start:unsafe": "electron --no-sandbox .",
+    "start:x11:unsafe": "electron --no-sandbox --ozone-platform=x11 .",
+    "check": "node --check src/main.cjs && node --check src/pet-preload.cjs && node --check src/dsh-preload.cjs && node --check src/todo-preload.cjs && node --check src/todos-store.cjs && node --check src/todo.js && node --check src/asr-engine.cjs && node --check src/voice-settings-store.cjs && node --check src/voice-preload.cjs && node --check src/voice-capture.js && node --check src/voice.js",
+    "setup:sandbox": "bash scripts/setup-sandbox.sh",
+    "install:desktop": "bash scripts/install-desktop.sh",
+    "uninstall:desktop": "bash scripts/uninstall-desktop.sh"
+  },
+  "devDependencies": {
+    "electron": "44.3.0"
+  },
+  "dependencies": {
+    "sherpa-onnx-node": "^1.13.8"
+  }
+}

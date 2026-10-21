@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DeskDSH 待办</title>
+  <link rel="stylesheet" href="todo.css">
+</head>
+<body>
+  <main class="note">
+    <header>
+      <div class="drag"><span class="mark">✓</span><div><strong>未完成任务</strong><small id="summary">0 项待办</small></div></div>
+      <button id="close" title="收起便签" aria-label="收起便签">×</button>
+    </header>
+    <form id="add-form">
+      <input id="new-todo" maxlength="240" autocomplete="off" placeholder="添加一个任务…">
+      <button type="submit" title="添加任务">＋</button>
+    </form>
+    <section id="empty" class="empty"><b>现在没有任务</b><span>在上方写下一件要做的事</span></section>
+    <ul id="todos" aria-live="polite"></ul>
+    <footer>点击圆圈划掉 · 双击文字编辑 · × 删除</footer>
+  </main>
+  <script src="todo.js"></script>
+</body>
+</html>

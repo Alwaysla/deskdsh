@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DeskDSH</title>
+  <link rel="stylesheet" href="pet.css">
+</head>
+<body>
+  <main class="pet-shell" aria-label="DeskDSH 桌面宠物">
+    <div class="status" id="status" data-online="checking">正在寻找 DSH…</div>
+    <div class="pet" id="pet" title="按住人物拖动；点击下方 💬 打开对话" aria-label="可拖动的 DSH 小助手">
+      <img src="../dsh.jpg" alt="DSH 小助手" draggable="false">
+      <span class="pet-glow"></span>
+    </div>
+    <nav class="actions" aria-label="快捷操作">
+      <button id="voice" title="语音设置">🎤</button>
+      <button id="todo" class="todo-button" title="待办便签"><span>✓</span><b id="todo-count" hidden>0</b></button>
+      <button id="chat" title="迷你对话">💬</button>
+      <button id="full" title="完整 DSH">▣</button>
+      <button id="retry" title="重新连接">↻</button>
+      <button id="quit" title="退出">×</button>
+    </nav>
+  </main>
+  <script src="pet.js"></script>
+</body>
+</html>
