@@ -6,6 +6,7 @@ const http = require('node:http')
 const { createTodoStore } = require('./todos-store.cjs')
 const { createAsrEngine, downloadModel, modelReady, modelPath } = require('./asr-engine.cjs')
 const { createVoiceSettings } = require('./voice-settings-store.cjs')
+const { createDshBridge } = require('./screen-watch.cjs')
 
 function configuredDshUrl() {
   let parsed
@@ -38,6 +39,7 @@ let voiceWindow
 let fullWindow
 let tray
 let todoStore
+let dshBridge
 let asrEngine
 let voiceSettings
 let voiceListening = false
@@ -503,15 +505,15 @@ function processVoiceCommand(text) {
       return
     }
     publishVoiceTranscript(rest, 'final')
-    routeCommand(rest)
+    void routeCommand(rest)
     return
   }
 
   publishVoiceTranscript(cmd, 'final')
-  routeCommand(cmd)
+  void routeCommand(cmd)
 }
 
-function routeCommand(cmd) {
+async function routeCommand(cmd) {
   const lower = cmd.toLowerCase()
 
   if (/^(打开|开)(迷你)?对话|打开聊天/.test(lower)) {
@@ -548,6 +550,38 @@ function routeCommand(cmd) {
 
   // Fallback: forward to DSH chat as a user message
   sendToDshChat(cmd)
+}
+
+// Send text (+optional screenshot) through the DSH HTTP RPC API
+async function sendViaApi(text, withImage) {
+  try {
+    const settings = voiceSettings?.get() ?? {}
+    const image = withImage ? await dshBridge.capturePrimaryScreen() : undefined
+    const title = settings.voiceTarget === 'full:session' ? settings.voiceTargetSession : ''
+    const sessionId = await dshBridge.resolveSessionId(title)
+    if (!sessionId) return false
+    await dshBridge.sendPrompt(sessionId, text, image)
+    return true
+  } catch (e) {
+    console.error('[DeskDSH] API send failed:', e.message)
+    return false
+  }
+}
+
+// Send text (+optional screenshot) through the DSH HTTP RPC API
+async function sendViaApi(text, withImage) {
+  try {
+    const settings = voiceSettings?.get() ?? {}
+    const image = withImage ? await dshBridge.capturePrimaryScreen() : undefined
+    const title = settings.voiceTarget === 'full:session' ? settings.voiceTargetSession : ''
+    const sessionId = await dshBridge.resolveSessionId(title)
+    if (!sessionId) return false
+    await dshBridge.sendPrompt(sessionId, text, image)
+    return true
+  } catch (e) {
+    console.error('[DeskDSH] API send failed:', e.message)
+    return false
+  }
 }
 
 // Enumerate sessions in a DSH window sidebar (role=treeitem rows with titles)
@@ -667,8 +701,12 @@ async function submitToWindow(window, text) {
   return false
 }
 
-// Send voice text to the configured DSH target
+// Send voice text to the configured DSH target. API first; UI injection as fallback.
 async function sendToDshChat(text) {
+  if (await sendViaApi(text, false)) {
+    publishVoiceTranscript(`✅ 已发送给 DSH: ${text}`, 'info')
+    return
+  }
   const settings = voiceSettings?.get() ?? {}
   const target = settings.voiceTarget || 'chat:current'
   const useFull = target.startsWith('full')
@@ -948,9 +986,11 @@ app.whenReady().then(async () => {
   todoStore = createTodoStore(join(app.getPath('userData'), 'todos.json'))
   voiceSettings = createVoiceSettings(app.getPath('userData'))
   asrEngine = createAsrEngine(MODELS_BASE)
-  if (modelReady(MODELS_BASE)) {
-    try { asrEngine.init() } catch (e) { console.warn('[DeskDSH] ASR init failed:', e.message) }
-  }
+  dshBridge = createDshBridge(DSH_ORIGIN)
+
+  // Let the embedded DSH web page capture the screen WITHOUT the picker
+  // dialog: every getDisplayMedia request resolves to the primary screen.
+  // (Screen-watch runs inside DeskDSH; plain browsers still get the picker.)
   ipcMain.handle('pet:get-state', (event) => fromPet(event) ? publishState() : undefined)
   ipcMain.handle('pet:toggle-chat', (event) => fromPet(event) ? toggleChat() : undefined)
   ipcMain.handle('pet:toggle-todo', (event) => fromPet(event) ? toggleTodo() : undefined)
@@ -979,6 +1019,22 @@ app.whenReady().then(async () => {
   })
   createPetWindow()
   createTray()
+  const { desktopCapturer } = require('electron')
+  try {
+    const { session } = require('electron')
+    session.defaultSession.setDisplayMediaRequestHandler((request, callback) => {
+      desktopCapturer.getSources({ types: ['screen'] }).then(sources => {
+        const primary = sources[0]
+        if (primary) callback({ video: primary })
+        else callback({})
+      }).catch(() => callback({}))
+    })
+  } catch (e) {
+    console.warn('[DeskDSH] display-media handler setup failed:', e.message)
+  }
+  if (modelReady(MODELS_BASE)) {
+    try { asrEngine.init() } catch (e) { console.warn('[DeskDSH] ASR init failed:', e.message) }
+  }
   await refreshOnline()
   if (process.env.DESKDSH_SMOKE_TEST === '1') await runSmokeTest()
 })
